@@ -39,30 +39,40 @@ public class AndroidApp {
             capabilities.setCapability("visual", true);
             capabilities.setCapability("devicelog", true);
 
+            //GRANT PERMISSIONS FOR ANDROID
+            capabilities.setCapability("autoGrantPermissions", true);
+
             String hub = "https://" + userName + ":" + accessKey + gridURL;
             driver = new AppiumDriver(new URL(hub), capabilities);
 
             MobileElement color = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/color");
+            //Changes color to pink
             color.click();
             Thread.sleep(1000);
 
             MobileElement text = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/Text");
+            //Changes the text to "Proverbial"
             text.click();
 
+            //toast will be visible
             MobileElement toast = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/toast");
             toast.click();
 
+            //notification will be visible
             MobileElement notification = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/notification");
             notification.click();
             Thread.sleep(2000);
 
+            //Opens the geolocation page
             MobileElement geo = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/geoLocation");
             geo.click();
             Thread.sleep(5000);
 
+            //takes back to home page
             MobileElement home = (MobileElement) driver.findElementByAccessibilityId("Home");
             home.click();
 
+            //Takes to speed test page
             MobileElement speedtest = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/speedTest");
             speedtest.click();
             Thread.sleep(5000);
@@ -70,6 +80,7 @@ public class AndroidApp {
             MobileElement Home = (MobileElement) driver.findElementByAccessibilityId("Home");
             Home.click();
 
+            //Opens the browser
             MobileElement browser = (MobileElement) driver.findElementByAccessibilityId("Browser");
             browser.click();
 
@@ -79,16 +90,14 @@ public class AndroidApp {
             MobileElement find = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/find");
             find.click();
 
-            //MARKING TEST AS PASSED VIA LAMBDA HOOKS            
-            driver.executeScript('lambda-status=passed');
-
             driver.quit();
 
         } catch (Exception e) {
             e.printStackTrace();
-            //MARKING TEST AS FAILED VIA LAMBDA HOOKS            
-            driver.executeScript('lambda-status=failed');
-            driver.quit();
+            try{
+                driver.quit();
+            }catch(Exception e1){
+                e.printStackTrace();
             }
         }
 

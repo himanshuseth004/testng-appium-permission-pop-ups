@@ -39,7 +39,12 @@ public class iOSApp {
             capabilities.setCapability("network", false);
             capabilities.setCapability("visual", true);
             capabilities.setCapability("devicelog", true);
-            //capabilities.setCapability("geoLocation", "HK");
+
+            //ACCEPT ALERTS FOR IOS
+            capabilities.setCapability("autoAcceptAlerts", true);
+            
+            //DISMISS ALERTS FOR IOS
+            capabilities.setCapability("autoDismissAlerts", false);
 
             String hub = "https://" + userName + ":" + accessKey + gridURL;
             driver = new AppiumDriver(new URL(hub), capabilities);

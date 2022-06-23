@@ -1,10 +1,10 @@
-# How to mark test as Passed or Failed in TestNG with Appium on [LambdaTest](https://www.lambdatest.com/?utm_source=github&utm_medium=repo&utm_campaign=appium-testNG-passfail)
+# How to handle permission pop-ups in TestNG with Appium on [LambdaTest](https://www.lambdatest.com/?utm_source=github&utm_medium=repo&utm_campaign=appium-testNG-permissions)
 
-While performing app automation testing with appium on LambdaTest Grid, you may face a scenario where a test that you declared as fail in your local instance may turn out to be completed successfully at LambdaTest. Don't worry though! We understand how imperative it is to flag an app automation test as either "pass" or "fail" depending upon your testing requirement with respect to the validation of expected behaviour. You can refer to sample test repo [here](https://github.com/LambdaTest/LT-appium-java-testng).
+While performing app automation testing with appium on LambdaTest Grid, you may face a scenario where you would like to automatically handle permission pop-ups. You may choose to either accept all permission pop-ups or dismiss all of them. You can handle the case as mentioned below separately for Android or iOS apps. You can refer to sample test repo [here](https://github.com/LambdaTest/LT-appium-java-testng).
 
 # Steps:
 
-You can specify a test as passed or failed by Lambda hooks. The following is an example on how to set test result as passed or failed. If the code reaches exception, then it will be marked as failed, else as passed.
+The following is an example on how to handle permissions in the capabilities in the automation script.
 
 ```java
 import io.appium.java_client.AppiumDriver;
@@ -12,13 +12,18 @@ import org.testng.annotations.Test;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import io.appium.java_client.MobileElement;
 import java.net.URL;
+
 public class AndroidApp {
+
     String userName = System.getenv("LT_USERNAME") == null ?
             "username" : System.getenv("LT_USERNAME"); //Enter your username here
     String accessKey = System.getenv("LT_ACCESS_KEY") == null ?
             "accessKey" : System.getenv("LT_ACCESS_KEY"); //Enter your accessKey here
+
     public String gridURL = "@mobile-hub.lambdatest.com/wd/hub";
+
     AppiumDriver driver;
+
     @Test
     @org.testng.annotations.Parameters(value = {"device", "version", "platform"})
     public void AndroidApp1() {
@@ -31,8 +36,19 @@ public class AndroidApp {
                 capabilities.setCapability("platformName", "Android");
                 capabilities.setCapability("isRealMobile", true);
                 capabilities.setCapability("app", "lt://"); //Enter your app url here
+
+                //GRANT PERMISSIONS FOR ANDROID
+                capabilities.setCapability("autoGrantPermissions", true);
+                
+                //ACCEPT ALERTS FOR IOS
+                capabilities.setCapability("autoAcceptAlerts", true);
+                
+                //DISMISS ALERTS FOR IOS
+                capabilities.setCapability("autoDismissAlerts", false);
+
             String hub = "https://" + userName + ":" + accessKey + gridURL;
             driver = new AppiumDriver(new URL(hub), capabilities);
+
             MobileElement color = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/color");
             color.click();
             MobileElement text = (MobileElement) driver.findElementById("com.lambdatest.proverbial:id/Text");
@@ -43,15 +59,10 @@ public class AndroidApp {
             notification.click();
             Thread.sleep(2000);
 
-            //MARKING TEST AS PASSED VIA LAMBDA HOOKS
-            driver.executeScript('lambda-status=passed')
             driver.quit();
 
         } catch (Exception e) {
             e.printStackTrace();
-            
-            //MARKING TEST AS FAILED VIA LAMBDA HOOKS            
-            driver.executeScript('lambda-status=failed');
             driver.quit();
             }
         }
@@ -111,4 +122,4 @@ To stay updated with the latest features and product add-ons, visit [Changelog](
 ## We are here to help you :headphones:
 
 * Got a query? we are available 24x7 to help. [Contact Us](support@lambdatest.com)
-* For more info, visit - [LambdaTest](https://www.lambdatest.com/?utm_source=github&utm_medium=repo&utm_campaign=LT-appium-python)
+* For more info, visit - [LambdaTest](https://www.lambdatest.com/?utm_source=github&utm_medium=repo&utm_campaign=appium-testNG-permissions)
